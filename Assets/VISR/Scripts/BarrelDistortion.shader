@@ -44,17 +44,15 @@
 			}
 			
 			sampler2D _MainTex;
-
+			float2 _Diff;
+			
 			float _XOffset;
-
 			float _K1;
 			float _K2;
 			float _K3;
 			float _K4;
 
-			float2 _Diff;
-
-			float2 distortbarrel(float2 offset) {
+			float2 calculateDistortion(float2 offset) {
 				float2 offsetSquared = offset * offset;
 				float radiusSquared = offsetSquared.x + offsetSquared.y;
 				float distortionScale = _K1 + _K2 * radiusSquared + _K3 * radiusSquared * radiusSquared + _K4 * radiusSquared * radiusSquared * radiusSquared;
@@ -66,7 +64,9 @@
 				//move this from viewport space to centered coordinates;
 				float2 position = (((i.uv + float2(_XOffset,0)) + _Diff) * 2 - float2(1,1));
 
-				float2 distorted = distortbarrel(position) * (1.0 - _K2);
+				float2 distorted = calculateDistortion(position) * (1.0 - _K2);
+
+				//convert back to texcoords
 				distorted = (distorted + float2(1, 1) / 2);
 
 				if (distorted.x < 0 || distorted.y < 0)

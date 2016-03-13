@@ -13,7 +13,9 @@ namespace VisrSdk
         // Creates a private material used to the effect
         void Awake()
         {
-            Configuration.CheckConfiguration();
+            if(!Application.isEditor)
+                Configuration.CheckConfiguration();
+
             visrCamera = GetComponentInParent<VisrCamera>();
 
             Shader shader = visrCamera.DistortionShader;
@@ -29,27 +31,21 @@ namespace VisrSdk
 
         void Start()
         {
-            Configuration.CheckConfiguration();
+            if (!Application.isEditor)
+                Configuration.CheckConfiguration();
             setShaderParams();
         }
 
         Vector2 getViewSize()
         {
-            if (Application.isEditor)
-            {
 #if UNITY_EDITOR
-                System.Type T = System.Type.GetType("UnityEditor.GameView,UnityEditor");
-                System.Reflection.MethodInfo GetSizeOfMainGameView = T.GetMethod("GetSizeOfMainGameView", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-                System.Object Res = GetSizeOfMainGameView.Invoke(null, null);
-                return (Vector2)Res;
+            System.Type T = System.Type.GetType("UnityEditor.GameView,UnityEditor");
+            System.Reflection.MethodInfo GetSizeOfMainGameView = T.GetMethod("GetSizeOfMainGameView", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+            System.Object Res = GetSizeOfMainGameView.Invoke(null, null);
+            return (Vector2)Res;
 #else
-                return new Vector2(Screen.width, Screen.height);
+            return new Vector2(Screen.width, Screen.height);
 #endif
-            }
-            else
-            {
-                return new Vector2(Screen.width, Screen.height);
-            }
         }
 
         void setShaderParams()

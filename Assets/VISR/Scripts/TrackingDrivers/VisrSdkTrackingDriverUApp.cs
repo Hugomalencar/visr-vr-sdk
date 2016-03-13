@@ -108,6 +108,11 @@ namespace VisrSdk
         {
             return trackingNodes.Values;
         }
+
+        public override string GetDefaultCameraMountName()
+        {
+            return "Head";
+        }
     }
 #endif
 }

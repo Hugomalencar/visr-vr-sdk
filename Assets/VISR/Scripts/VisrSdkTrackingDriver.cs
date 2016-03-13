@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 namespace VisrSdk
 {
@@ -20,6 +21,7 @@ namespace VisrSdk
         public abstract void Init();
         public abstract void UpdateTracking();
         public abstract string[] GetTrackingNodeNames();
+        public abstract string GetDefaultCameraMountName();
         public abstract IEnumerable<TrackingNode> GetAllTrackingNodes();
         public abstract TrackingNode CreateTrackingNode(string name);
         public abstract TrackingNode GetTrackingNode(string name);
@@ -140,6 +142,11 @@ namespace VisrSdk
             public override IEnumerable<TrackingNode> GetAllTrackingNodes()
             {
                 return trackingNodes.Values;
+            }
+
+            public override string GetDefaultCameraMountName()
+            {
+                return "Head";
             }
         }
     }

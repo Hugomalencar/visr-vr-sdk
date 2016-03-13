@@ -57,6 +57,8 @@ namespace VisrSdk
 
         public bool DisableStereoInEditor = false;
 
+        public string TrackingNodeName = "Head";
+
         void Start()
         {
 
@@ -68,14 +70,9 @@ namespace VisrSdk
         }
 
 #if UNITY_EDITOR
-        void Update()
-        {
-            /*if(PresetDevices == null || PresetDevices.Length == 0)
-            {
-                UnityEditor.AssetDatabase.LoadAssetAtPath<ScriptableObject>("/Visr/Resources/Presets.asset");
-            }*/
 
-            //this is a little expensive but shouldn't matter on editor PC's
+        void handleStereoOption()
+        {
             if (DisableStereoInEditor)
             {
                 transform.FindChild("L").gameObject.SetActive(false);
@@ -87,8 +84,20 @@ namespace VisrSdk
                 transform.FindChild("L").gameObject.SetActive(true);
                 transform.FindChild("R").gameObject.SetActive(true);
                 transform.FindChild("Preview").gameObject.SetActive(false);
-            } 
+            }
         }
+
 #endif
+
+        void LateUpdate()
+        {
+#if UNITY_EDITOR
+            handleStereoOption();
+#endif
+            if(TrackingNodeName != null && Application.isPlaying)
+            {
+                TrackingSystem.Instance.SyncToTrackingNode(TrackingNodeName, transform);
+            }
+        }
     }
 }
